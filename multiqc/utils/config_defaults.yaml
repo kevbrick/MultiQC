@@ -515,6 +515,12 @@ module_order:
   - hicup:
       module_tag:
         - hi-c
+  - pairtools:
+      module_tag:
+          - hi-c
+  - markallelicstatus:
+      module_tag:
+          - DNA
   - hicpro:
       module_tag:
         - hi-c

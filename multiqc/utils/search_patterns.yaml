@@ -409,6 +409,14 @@ ngsderive/junction_annotation:
 optitype:
   contents: "	A1	A2	B1	B2	C1	C2	Reads	Objective"
   num_lines: 1
+pairtools:
+  - contents: 'total_single_sided_mapped'
+    num_lines: 20
+  - contents: 'pair_types'
+    num_lines: 20
+markallelicstatus:
+  - contents: 'allelic_status'
+    num_lines: 20
 peddy/summary_table:
   fn: "*.peddy.ped"
 peddy/het_check:
