@@ -17,7 +17,7 @@ from copy import copy
 from itertools import combinations_with_replacement, zip_longest
 from operator import itemgetter
 
-from .utils import read_allelicstatus_stats, allelictypes_common
+from .utils import read_allelicstatus_stats, allelictypes_common, allelicpairtypes
 
 # Initialise the logger
 log = logging.getLogger(__name__)
@@ -48,18 +48,6 @@ class MultiqcModule(BaseMultiqcModule):
 
         log.info("Found {} reports".format(len(self.markallelicstatus_stats)))
 
-        # # Add to self.js to be included in template
-        # self.js = {'assets/js/multiqc_pairtools.js' : os.path.join(os.path.dirname(__file__), 'assets', 'js', 'multiqc_pairtools.js') }
-        #
-        # # determine max total reads for general stats:
-        # self.max_total_reads = 0
-        # for s_name in self.markallelicstatus_stats:
-        #     self.max_total_reads = \
-        #         max(self.max_total_reads, self.markallelicstatus_stats[s_name]['total'])
-        # # self.max_total_reads = max(self.pairtools_stats[s_name]['total'] for s_name in self.pairtools_stats)
-
-        #self.markallelicstatus_general_stats()
-
         # Report sections
         self.add_section (
             name = 'Allelic alignment status',
@@ -71,6 +59,17 @@ class MultiqcModule(BaseMultiqcModule):
             plot = self.markallelicstatus_chart()
         )
 
+        # Report sections
+        self.add_section (
+            name = 'Allelic Pairs status',
+            anchor = 'pair-types',
+            description="Number of read-pairs classified according to their parental alignment status",
+            helptext = '''For further details check out HiCPro
+                        <a href=\"https://github.com/nservant/HiC-Pro\" > HiC Pro</a>
+                        documentation.''',
+            plot = self.markallelicstatus_pairschart()
+        )
+
     def parse_markallelicstatus_stats(self, f):
         """ Parse an allelicstatus summary stats file """
         # s_name = f['s_name']
@@ -78,7 +77,6 @@ class MultiqcModule(BaseMultiqcModule):
         # log.info("parsing {} {} ...".format(s_name,f_name))
         f_handle = f['f']
         return read_allelicstatus_stats(f_handle)
-
 
     def markallelicstatus_chart(self):
         """ Generate the allelic status report """
@@ -92,6 +90,8 @@ class MultiqcModule(BaseMultiqcModule):
         for s_name in self.markallelicstatus_stats:
             atypes_dict[s_name] = dict()
             for atype in self.markallelicstatus_stats[s_name][report_field]:
+                print(s_name + "-" + report_field + "-" + atype)
+                print(self.markallelicstatus_stats[s_name][report_field][atype])
                 atypes_dict[s_name][atype] = self.markallelicstatus_stats[s_name][report_field][atype]
                 # # update the collection of rare pair types :
                 # if atype not in allelictypes_common:
@@ -109,6 +109,39 @@ class MultiqcModule(BaseMultiqcModule):
             'title': 'mark allelic status: allelic status report',
             'ylab': '# Reads',
             'cpswitch_counts_label': 'Number of Reads'
+        }
+
+        return bargraph.plot(atypes_dict, atypes_annotated, pconfig=config)
+
+    def markallelicstatus_pairschart(self):
+        """ Generate the allelic status pairs report """
+
+        report_field = "allelic_pairs"
+
+        # Construct a data structure for the plot: sample ->
+        # and keep track of the common pair types - for nice visuals:
+        atypes_dict = dict()
+        rare_atypes = set()
+        for s_name in self.markallelicstatus_stats:
+            atypes_dict[s_name] = dict()
+            for atype in self.markallelicstatus_stats[s_name][report_field]:
+                atypes_dict[s_name][atype] = self.markallelicstatus_stats[s_name][report_field][atype]
+                # # update the collection of rare pair types :
+                # if atype not in allelictypes_common:
+                #     aare_ptypes.add(atype)
+
+        # organize pair types in a predefined order, common first, rare after:
+        atypes_annotated = OrderedDict()
+        for atype, color in allelicpairtypes.items():
+            atypes_annotated[atype] = {'color': color, 'name': atype}
+
+        print (atypes_dict)
+        # Config for the plot
+        config = {
+            'id': 'allelic_status_pairs',
+            'title': 'mark allelic status: pairs report',
+            'ylab': '# Pairs',
+            'cpswitch_counts_label': 'Number of Pairs'
         }
 
         return bargraph.plot(atypes_dict, atypes_annotated, pconfig=config)

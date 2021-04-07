@@ -417,6 +417,8 @@ pairtools:
 markallelicstatus:
   - contents: 'allelic_status'
     num_lines: 20
+  - contents: 'allelic_pairs'
+    num_lines: 20
 peddy/summary_table:
   fn: "*.peddy.ped"
 peddy/het_check:

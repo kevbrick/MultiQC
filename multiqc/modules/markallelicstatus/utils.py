@@ -13,6 +13,13 @@ allelictypes_common = OrderedDict([('genome1'         , '#33a02c'), # Green
                                    ('conflicting'     , '#e31a1c'), # Grey
                                    ('other'           , '#cccccc')])
 
+allelicpairtypes    = OrderedDict([('0-0'             , '#cccccc'), # Green
+                                   ('0-1'             , '#aaaaaa'), # Violet
+                                   ('0-2'             , '#222222'), # Violet
+                                   ('1-2'             , '#6a3d9a'), # Violet
+                                   ('1-1'             , '#33a02c'), # orange
+                                   ('2-2'             , '#fff900')])
+
 class ParseError(Exception):
     pass
 
@@ -36,6 +43,15 @@ def read_allelicstatus_stats(file_handle):
         ('unassigned_other', 0),
         ('conflicting', 0),
         ('other', 0)
+        ])
+
+    stat_from_file['allelic_pairs'] = OrderedDict([
+        ('0-0', 0),
+        ('0-1', 0),
+        ('0-2', 0),
+        ('1-2', 0),
+        ('1-1', 0),
+        ('2-2', 0),
         ])
     #
     # stat_from_file['genome1'] = 0
