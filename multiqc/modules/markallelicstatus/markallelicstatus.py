@@ -90,8 +90,8 @@ class MultiqcModule(BaseMultiqcModule):
         for s_name in self.markallelicstatus_stats:
             atypes_dict[s_name] = dict()
             for atype in self.markallelicstatus_stats[s_name][report_field]:
-                print(s_name + "-" + report_field + "-" + atype)
-                print(self.markallelicstatus_stats[s_name][report_field][atype])
+                #print(s_name + "-" + report_field + "-" + atype)
+                #print(self.markallelicstatus_stats[s_name][report_field][atype])
                 atypes_dict[s_name][atype] = self.markallelicstatus_stats[s_name][report_field][atype]
                 # # update the collection of rare pair types :
                 # if atype not in allelictypes_common:
@@ -102,7 +102,7 @@ class MultiqcModule(BaseMultiqcModule):
         for atype, color in allelictypes_common.items():
             atypes_annotated[atype] = {'color': color, 'name': atype}
 
-        print (atypes_dict)
+        #print (atypes_dict)
         # Config for the plot
         config = {
             'id': 'allelic_status',
@@ -135,7 +135,7 @@ class MultiqcModule(BaseMultiqcModule):
         for atype, color in allelicpairtypes.items():
             atypes_annotated[atype] = {'color': color, 'name': atype}
 
-        print (atypes_dict)
+        #print (atypes_dict)
         # Config for the plot
         config = {
             'id': 'allelic_status_pairs',

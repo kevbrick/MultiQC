@@ -77,7 +77,7 @@ def read_allelicstatus_stats(file_handle):
         if len(key_fields) == 2:
             key = key_fields.pop(0)
             stat_from_file[key][key_fields[0]] = int(fields[1])
-            print(key_fields[0] + " - " + fields[1] + "\n")
+            #print(key_fields[0] + " - " + fields[1] + "\n")
         else:
             raise ParseError(
                 '{} is not a valid stats file: {} section implies 2 identifiers'.format(file_handle.name,key))

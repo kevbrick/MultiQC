@@ -180,16 +180,26 @@ def read_pairs_stats(file_handle):
     # return PairCounter from a non-empty dict:
     #
     # add some fractions:
-    stat_from_file['frac_unmapped'] = stat_from_file['total_unmapped']/stat_from_file['total']*100.
-    stat_from_file['frac_single_sided_mapped'] = stat_from_file['total_single_sided_mapped']/stat_from_file['total']*100.
-    # total_mapped = total_dups + total_nodups
-    # should the following be divided by mapped or by total ?!
-    stat_from_file['frac_mapped'] = stat_from_file['total_mapped']/stat_from_file['total']*100.
-    stat_from_file['frac_dups'] = stat_from_file['total_dups']/stat_from_file['total']*100.
-    ########################################
-    # the rest of stats are based on nodups:
-    ########################################
-    stat_from_file['cis_percent'] = stat_from_file['cis']/stat_from_file['total_nodups']*100.
+    if stat_from_file['total']:
+        stat_from_file['frac_unmapped'] = stat_from_file['total_unmapped']/stat_from_file['total']*100.
+        stat_from_file['frac_single_sided_mapped'] = stat_from_file['total_single_sided_mapped']/stat_from_file['total']*100.
+        # total_mapped = total_dups + total_nodups
+        # should the following be divided by mapped or by total ?!
+        stat_from_file['frac_mapped'] = stat_from_file['total_mapped']/stat_from_file['total']*100.
+        stat_from_file['frac_dups'] = stat_from_file['total_dups']/stat_from_file['total']*100.
+        ########################################
+        # the rest of stats are based on nodups:
+        ########################################
 
-    #
+    else:
+        stat_from_file['frac_unmapped'] = 0.
+        stat_from_file['frac_single_sided_mapped'] = 0.
+        stat_from_file['frac_mapped'] = 0.
+        stat_from_file['frac_dups'] = 0.
+
+    if stat_from_file['total_nodups']:
+        stat_from_file['cis_percent'] = stat_from_file['cis']/stat_from_file['total_nodups']*100.
+    else:
+        stat_from_file['cis_percent'] = 0.
+
     return stat_from_file

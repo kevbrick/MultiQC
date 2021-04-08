@@ -75,61 +75,63 @@ class MultiqcModule(BaseMultiqcModule):
             plot = self.pair_types_chart()
         )
 
-        self.add_section (
-            name = 'Pre-filtered pairs grouped by genomic separations',
-            anchor = 'cis-ranges-trans',
-            description="Distribution of pre-filtered pairs (UU, UR and RU) by genomic"
-                        " separations for <it>cis-</it>pairs and <it>trans-</it>pairs as a separate group.",
-            helptext = '''Pre-filtered read pairs might still include artifacts:
-            Short-range cis-pairs are typically enriched in technical artifacts, such as self-circles, dangling-ends, etc.
-            High fraction of trans interactions typically suggests increased noise levels''',
-            plot = self.pairs_by_cisrange_trans()
-        )
+        if self.pairtools_stats[s_name]['total'] > 0:
+            if self.pairtools_stats[s_name]['total_mapped'] > 0:
+                self.add_section (
+                    name = 'Pre-filtered pairs grouped by genomic separations',
+                    anchor = 'cis-ranges-trans',
+                    description="Distribution of pre-filtered pairs (UU, UR and RU) by genomic"
+                                " separations for <it>cis-</it>pairs and <it>trans-</it>pairs as a separate group.",
+                    helptext = '''Pre-filtered read pairs might still include artifacts:
+                    Short-range cis-pairs are typically enriched in technical artifacts, such as self-circles, dangling-ends, etc.
+                    High fraction of trans interactions typically suggests increased noise levels''',
+                    plot = self.pairs_by_cisrange_trans()
+                )
 
 
-        self.add_section (
-            name = 'Frequency of interactions as a function of genomic separation',
-            anchor = 'scalings-plots',
-            description="Frequency of interactions (pre-filtered pairs) as a function"
-                        " of genomic separation, known as \"scaling plots\", P(s)."
-                        " Click on an individual curve to reveal P(s) for different"
-                        " read pair orientations.",
-            helptext = '''Short-range cis-pairs are typically enriched in technical artifacts.
-            Frequency of interactions for read pairs of different orientations
-            ++,+-,-+ and -- (FF, FR, RF, RR) provide insight into these technical artifacts.
-            Different technical artifacts manifest themselves with only single type of read orientation
-            (dangling-ends - FR, self-circles - RF). Thus enrichment of FR/RF pairs at a given genomic
-            separation can hint at the level of contamination.''',
-            plot = self.pairs_with_genomic_separation()
-        )
+                self.add_section (
+                    name = 'Frequency of interactions as a function of genomic separation',
+                    anchor = 'scalings-plots',
+                    description="Frequency of interactions (pre-filtered pairs) as a function"
+                                " of genomic separation, known as \"scaling plots\", P(s)."
+                                " Click on an individual curve to reveal P(s) for different"
+                                " read pair orientations.",
+                    helptext = '''Short-range cis-pairs are typically enriched in technical artifacts.
+                    Frequency of interactions for read pairs of different orientations
+                    ++,+-,-+ and -- (FF, FR, RF, RR) provide insight into these technical artifacts.
+                    Different technical artifacts manifest themselves with only single type of read orientation
+                    (dangling-ends - FR, self-circles - RF). Thus enrichment of FR/RF pairs at a given genomic
+                    separation can hint at the level of contamination.''',
+                    plot = self.pairs_with_genomic_separation()
+                )
 
 
-        self.add_section (
-            name = 'Fraction of read pairs by strand orientation',
-            anchor = 'read-orientation',
-            description="Number of interactions (pre-filtered pairs) reported for every type"
-                        " of read pair orientation. Numbers are reported for different"
-                        " ranges of genomic separation and combined.",
-            helptext = '''Short-range cis-pairs are typically enriched in technical artifacts.
-            Frequency of interactions for read pairs of different orientations
-            ++,+-,-+ and -- (FF, FR, RF, RR) provide insight into these technical artifacts.
-            Different technical artifacts manifest themselves with only single type of read orientation
-            (dangling-ends - FR, self-circles - RF). Thus enrichment of FR/RF pairs at a given genomic
-            separation can hint at the level of contamination.''',
-            plot = self.pairs_by_strand_orientation()
-        )
+                self.add_section (
+                    name = 'Fraction of read pairs by strand orientation',
+                    anchor = 'read-orientation',
+                    description="Number of interactions (pre-filtered pairs) reported for every type"
+                                " of read pair orientation. Numbers are reported for different"
+                                " ranges of genomic separation and combined.",
+                    helptext = '''Short-range cis-pairs are typically enriched in technical artifacts.
+                    Frequency of interactions for read pairs of different orientations
+                    ++,+-,-+ and -- (FF, FR, RF, RR) provide insight into these technical artifacts.
+                    Different technical artifacts manifest themselves with only single type of read orientation
+                    (dangling-ends - FR, self-circles - RF). Thus enrichment of FR/RF pairs at a given genomic
+                    separation can hint at the level of contamination.''',
+                    plot = self.pairs_by_strand_orientation()
+                )
 
 
-        self.add_section (
-            name = 'Pre-filtered pairs grouped by chromosomes',
-            anchor = 'pairs-by-chroms',
-            description="Number of pre-filtered interactions (pairs) within a single chromosome"
-                        " or for a pair of chromosomes.",
-            helptext = '''Numbers of pairs are normalized by the total number of pre-filtered pairs per sample.
-            Number are reported only for chromosomes/pairs that have >1% of pre-filtered pairs.
-            [THERE SEEM TO BE A BUG IN MULTIQC HEATMAP - OBVIOUS WHEN USE HIGHLIGHTING,RENAMING ETC]''',
-            plot = self.pairs_by_chrom_pairs()
-        )
+                self.add_section (
+                    name = 'Pre-filtered pairs grouped by chromosomes',
+                    anchor = 'pairs-by-chroms',
+                    description="Number of pre-filtered interactions (pairs) within a single chromosome"
+                                " or for a pair of chromosomes.",
+                    helptext = '''Numbers of pairs are normalized by the total number of pre-filtered pairs per sample.
+                    Number are reported only for chromosomes/pairs that have >1% of pre-filtered pairs.
+                    [THERE SEEM TO BE A BUG IN MULTIQC HEATMAP - OBVIOUS WHEN USE HIGHLIGHTING,RENAMING ETC]''',
+                    plot = self.pairs_by_chrom_pairs()
+                )
 
 
     def parse_pairtools_stats(self, f):
@@ -146,7 +148,7 @@ class MultiqcModule(BaseMultiqcModule):
 
         report_field = "pair_types"
 
-        # Construct a data structure for the plot: sample -> 
+        # Construct a data structure for the plot: sample ->
         # and keep track of the common pair types - for nice visuals:
         ptypes_dict = dict()
         rare_ptypes = set()
